@@ -24,6 +24,11 @@ const Game = (canvas: HTMLCanvasElement) => {
     Canvas.context.fillRect(0, 0, Canvas.c.width, Canvas.c.height)
   }
 
+  window.addEventListener('keydown', (e) => {
+    if(!e.repeat)
+      piece.move('LEFT')
+  })
+
   let timeToDown = 0
   let timeToRight = 0
 
@@ -32,17 +37,17 @@ const Game = (canvas: HTMLCanvasElement) => {
     clearWindow()
 
     //Update
-    if (timeToDown > 200){
+    if (timeToDown > 100){
       piece.move('DOWN')
       timeToDown = 0
     }
     timeToDown += 1
 
-    if (timeToRight > 300){
-      piece.move('RIGHT')
-      timeToRight = 0
-    }
-    timeToRight += 1
+    // if (timeToRight > 500){
+    //   piece.move('RIGHT')
+    //   timeToRight = 0
+    // }
+    // timeToRight += 1
 
     //Draw
     piece.draw()

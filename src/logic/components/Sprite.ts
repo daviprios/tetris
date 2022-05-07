@@ -19,22 +19,29 @@ export default class Sprite {
   }
 
   getPos(): Vector {
-    return this.rect.pos
+    const pos = new Vector(this.rect.pos.x, this.rect.pos.y)
+    return pos
   }
 
   getSize(): Vector {
-    return this.rect.size
+    const size = new Vector(this.rect.size.x, this.rect.size.y)
+    return size
   }
 
   getRect(): Rect {
-    return this.rect
+    const pos = this.getPos()
+    const size = this.getSize()
+    const rect = new Rect(pos, size)
+    return rect
   }
 
   draw() {
-    Canvas.context.drawImage(this.image,
+    Canvas.context.drawImage(
+      this.image,
       this.rect.pos.x,
       this.rect.pos.y,
       this.rect.size.x,
-      this.rect.size.y)
+      this.rect.size.y
+    )
   }
 }

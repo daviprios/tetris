@@ -29,7 +29,11 @@ export default class Block {
   }
 
   getPos(): Vector {
-    return this.sprite.getPos().div(blockSize)
+    const pos = new Vector(
+      this.sprite.getPos().x,
+      this.sprite.getPos().y
+    )
+    return pos.div(blockSize)
   }
 
   getIsMoving(): boolean {

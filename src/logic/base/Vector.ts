@@ -7,6 +7,10 @@ export default class Vector {
     this.y = y
   }
 
+  public getCopy (): Vector {
+    return new Vector(this.x, this.y)
+  }
+
   public add (vector: Vector): Vector {
     this.x += vector.x
     this.y += vector.y

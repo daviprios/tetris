@@ -24,8 +24,9 @@ export default class Block {
   private sprite: Sprite
 
   setPos(newPosition: Vector): void {
-    newPosition = newPosition.mul(blockSize)
-    this.sprite.setPos(newPosition)
+    let pos = new Vector(newPosition.x, newPosition.y)
+    pos = pos.mul(blockSize)
+    this.sprite.setPos(pos)
   }
 
   getPos(): Vector {

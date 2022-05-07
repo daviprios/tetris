@@ -3,6 +3,8 @@ import Vector from '../base/Vector';
 import Block from './Block'
 
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT'
+type PieceLayouts = [PieceLayout, PieceLayout, PieceLayout, PieceLayout]
+type PieceLayout = [Vector, Vector, Vector, Vector]
 
 const directionToIndex = {
   UP: 0,
@@ -13,13 +15,11 @@ const directionToIndex = {
 
 export default class Piece {
   constructor(
-    private layouts: [
-      [Vector, Vector, Vector, Vector],
-      [Vector, Vector, Vector, Vector],
-      [Vector, Vector, Vector, Vector],
-      [Vector, Vector, Vector, Vector]
-    ],
+    private anchor: Vector,
+    private layouts: PieceLayouts,
   ){
+    this.anchor = anchor
+
     this.blocks = [
       new Block(),
       new Block(),
@@ -28,31 +28,39 @@ export default class Piece {
     ]
 
     this.blocks.forEach((block, index) => {
-      const pos = this.layouts[directionToIndex[this.currentDirection]][index]
-      pos.x += 4
-      block.setPos(pos)
+      block.setPos(
+        this.layouts[directionToIndex[this.currentDirection]][index].getCopy()
+          .add(this.anchor.getCopy())
+      )
     })
-
-    //this.anchor = this.blocks[0].getPos()
   }
 
   private blocks: [Block, Block, Block, Block]
-  //private anchor: Vector
   private currentDirection: Direction = 'UP'
 
-  move(direction: Direction): void {
+  move(direction: Exclude<Direction, 'UP'>): void {
+    let offset: Vector
     switch(direction) {
       case 'DOWN':
-        //this.anchor.y += 1
-        this.blocks.forEach(block => block.setPos(block.getPos().sub(new Vector(0, -1))))
+        offset = new Vector(0, 1)
+        this.anchor.add(offset)
+        this.blocks.forEach(block => {
+          block.setPos(block.getPos().add(offset))
+        })
         break
       case 'LEFT':
-        //this.anchor.x -= 1
-        this.blocks.forEach(block => block.setPos(block.getPos().sub(new Vector(1, 0))))
+        offset = new Vector(-1, 0)
+        this.anchor.add(offset)
+        this.blocks.forEach(block => {
+          block.setPos(block.getPos().add(offset))
+        })
         break
       case 'RIGHT':
-        //this.anchor.x += 1
-        this.blocks.forEach(block => block.setPos(block.getPos().sub(new Vector(-1, 0))))
+        offset = new Vector(1, 0)
+        this.anchor.add(offset)
+        this.blocks.forEach(block => {
+          block.setPos(block.getPos().add(offset))
+        })
         break
       default:
         break
@@ -77,7 +85,31 @@ export default class Piece {
         break
     }
 
-    this.blocks[1].setPos(this.layouts[directionToIndex[this.currentDirection]][1])
+    this.blocks[0].setPos(
+      this.layouts[directionToIndex[this.currentDirection]][0].getCopy()
+        .add(this.anchor.getCopy())
+    )
+    this.blocks[1].setPos(
+      this.layouts[directionToIndex[this.currentDirection]][1].getCopy()
+        .add(this.anchor.getCopy())
+    )
+    this.blocks[2].setPos(
+      this.layouts[directionToIndex[this.currentDirection]][2].getCopy()
+        .add(this.anchor.getCopy())
+    )
+    this.blocks[3].setPos(
+      this.layouts[directionToIndex[this.currentDirection]][3].getCopy()
+        .add(this.anchor.getCopy())
+    )
+  }
+
+  getCopy(): Piece {
+    const layout: PieceLayouts =
+      this.layouts.map((layout: PieceLayout) => 
+        layout.map(vector => vector.getCopy())
+      )
+
+    return new Piece(this.anchor.getCopy(), layout)
   }
 
   draw(): void {

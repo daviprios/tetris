@@ -1,5 +1,6 @@
 import Canvas from './base/Canvas'
 import Vector from './base/Vector'
+import ManagePieces from './ManagePieces'
 
 import Piece from './objects/Piece'
 
@@ -11,11 +12,12 @@ const Game = (canvas: HTMLCanvasElement) => {
   Canvas.c.width = size * 10
 
   const piece = new Piece(
+    new Vector(4, 0),
     [
-      [new Vector(0, 0), new Vector(1, 0), new Vector(0, 1), new Vector(1, 1)],
-      [new Vector(0, 0), new Vector(1, 0), new Vector(0, 1), new Vector(1, 1)],
-      [new Vector(0, 0), new Vector(1, 0), new Vector(0, 1), new Vector(1, 1)],
-      [new Vector(0, 0), new Vector(1, 0), new Vector(0, 1), new Vector(1, 1)],
+      [new Vector(0, 0), new Vector(0, 1), new Vector(1, 1), new Vector(2, 1)],
+      [new Vector(1, 0), new Vector(2, 0), new Vector(1, 1), new Vector(1, 2)],
+      [new Vector(0, 1), new Vector(1, 1), new Vector(2, 1), new Vector(2, 2)],
+      [new Vector(1, 0), new Vector(1, 1), new Vector(1, 2), new Vector(0, 2)],
     ]
   )
 
@@ -26,28 +28,36 @@ const Game = (canvas: HTMLCanvasElement) => {
 
   window.addEventListener('keydown', (e) => {
     if(!e.repeat)
-      piece.move('LEFT')
+      switch(e.key) {
+        case 'ArrowUp':
+          piece.rotate()
+          break
+        case 'ArrowDown':
+          piece.move('DOWN')
+          break
+        case 'ArrowLeft':
+          piece.move('LEFT')
+          break
+        case 'ArrowRight':
+          piece.move('RIGHT')
+          break
+      }
   })
 
+  const managePieces = new ManagePieces()
+
   let timeToDown = 0
-  let timeToRight = 0
 
   const update = () => {
     //Clear
     clearWindow()
 
     //Update
-    if (timeToDown > 100){
+    if (timeToDown > 20){
       piece.move('DOWN')
       timeToDown = 0
     }
     timeToDown += 1
-
-    // if (timeToRight > 500){
-    //   piece.move('RIGHT')
-    //   timeToRight = 0
-    // }
-    // timeToRight += 1
 
     //Draw
     piece.draw()
